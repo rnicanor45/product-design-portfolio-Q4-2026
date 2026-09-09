@@ -36,6 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# raw, unrenamed image downloads pulled from the old Framer site for
+# reference during the rebuild — curated/renamed copies actually used by
+# the site live in public/images/, so these aren't needed in the repo
+/framer-source-images/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

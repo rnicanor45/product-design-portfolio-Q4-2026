@@ -1,26 +1,219 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
+/* ---------------------------------------------------------------------- *
+ * Design tokens.
+ *
+ * Palette: text and fills are primarily true black/white for maximum
+ * contrast. Color is reserved for two jobs: `--link` (aqua, falls back
+ * toward blue) marks other actions and links; the aqua/mint/red radial
+ * gradient (`--gradient-primary`) marks primary call-outs (main CTA
+ * buttons, headline stats) — see `.gradient-fill` / `.gradient-text` below.
+ *
+ * Theme: light is the default (`:root`). Dark applies either from the OS
+ * preference (`prefers-color-scheme`) or from the manual toggle
+ * (`[data-theme="dark"]`, set by ThemeToggle + the inline init script in
+ * layout.tsx) — the explicit attribute always wins over the OS preference
+ * in both directions, so the toggle can override either way.
+ * ---------------------------------------------------------------------- */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
+  --foreground: #000000;
+  --surface: #fafafa;
+  --border: #e5e5e5;
+  --muted: #525252;
+  --link: #0e7490;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --gradient-aqua: #22d3ee;
+  --gradient-mint: #34d399;
+  --gradient-red: #f43f5e;
+  --gradient-primary: radial-gradient(
+    circle at 30% 30%,
+    var(--gradient-aqua) 0%,
+    var(--gradient-mint) 35%,
+    var(--gradient-red) 75%
+  );
+  /* Same three colors, left-to-right: a radial gradient's spread depends on
+     box size, so on a short, narrow run of text (a stat number) it often
+     never reaches the outer color at all. Text fills use this instead so
+     all three colors are always visible regardless of string length.
+     Red is held flat from 78% to 100% (rather than only touching 100% as
+     a single point) so a real, solid band of red survives — with even
+     stops, the last color only reaches full strength at the very last
+     pixel, and on a short bold string that pixel gets lost to text-edge
+     anti-aliasing and reads as a muted, desaturated smudge instead of a
+     visible red. */
+  --gradient-primary-text: linear-gradient(
+    90deg,
+    var(--gradient-aqua) 0%,
+    var(--gradient-mint) 42%,
+    var(--gradient-red) 78%,
+    var(--gradient-red) 100%
+  );
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --background: #000000;
+    --foreground: #ffffff;
+    --surface: #0a0a0a;
+    --border: #262626;
+    --muted: #a3a3a3;
+    --link: #22d3ee;
   }
+}
+
+:root[data-theme="dark"] {
+  --background: #000000;
+  --foreground: #ffffff;
+  --surface: #0a0a0a;
+  --border: #262626;
+  --muted: #a3a3a3;
+  --link: #22d3ee;
+}
+
+@theme inline {
+  --color-bg: var(--background);
+  --color-fg: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-link: var(--link);
+  --font-sans:
+    var(--font-satoshi), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Point the typography plugin's color variables at our own theme tokens
+ * instead of its fixed slate/gray palette, so `.prose` content (About,
+ * case studies) follows light/dark automatically like everything else —
+ * these are CSS custom properties, so they re-resolve whenever --foreground
+ * etc. change, with no separate dark-mode override needed here. */
+.prose {
+  --tw-prose-body: var(--muted);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted);
+  --tw-prose-links: var(--link);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted);
+  --tw-prose-bullets: var(--border);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--muted);
+  --tw-prose-kbd: var(--foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}
+
+/* Accessible, visible focus ring everywhere — don't rely on browser default. */
+:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Skip-to-content link: hidden until keyboard-focused. */
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+  z-index: 100;
+  background: var(--surface);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Primary call-out fill (main CTA buttons): the aqua/mint/red radial
+ * gradient with a translucent black scrim on top so white button text
+ * stays readable no matter which color it lands on. */
+.gradient-fill {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
+    var(--gradient-primary);
+  color: #ffffff;
+}
+
+/* Primary call-out text (e.g. headline stats): the same gradient, clipped
+ * to the text itself. */
+.gradient-text {
+  background-image: var(--gradient-primary-text);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Infinite marquee (skills strip). Duplicated content track scrolls via
+ * transform; pausing it under reduced motion (below) just leaves the first
+ * copy visible and static rather than a jarring one-frame jump. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Slow badge rotation (footer). */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-slow {
+  animation: spin-slow 16s linear infinite;
+}
+
+/* Respect the OS-level reduced-motion preference for anything animated
+ * outside of Framer Motion (which is separately configured via
+ * <MotionConfig reducedMotion="user"> in MotionRoot). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .marquee-track,
+  .rotate-slow {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
