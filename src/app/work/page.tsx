@@ -8,9 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function WorkIndex() {
-  // Protected/NDA projects are left off the public index — they're still
-  // reachable at /work/<slug> for anyone with the direct link + password.
-  const visible = projects.filter((p) => !p.protected);
+  // Only true NDA/stealth projects (hideFromIndex) are left off the public
+  // index — a regular protected case study still shows a card here, gated
+  // behind a password on click. See src/data/projects.ts for the distinction.
+  const visible = projects.filter((p) => !p.hideFromIndex);
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-24">

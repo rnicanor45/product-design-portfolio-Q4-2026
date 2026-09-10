@@ -9,9 +9,15 @@
 // Add `protected: true` to a project and it is automatically:
 //   - gated behind a password (see src/proxy.ts + src/lib/protected-routes.ts)
 //   - excluded from search engines (noindex header + meta tag)
-//   - hidden from the public /work index (still reachable by direct link)
+//   - marked with a "Password protected" badge on its card
 // The password is read from env var `PROJECT_PASSWORD_<SLUG_UPPERCASED>`.
 // See .env.local.example.
+//
+// `protected` and `hideFromIndex` are independent: a protected case study
+// still shows up as a card on the home page and /work index by default
+// (visitors see it exists and hit the password wall on click — the common
+// portfolio pattern). Add `hideFromIndex: true` as well for true NDA/stealth
+// work that shouldn't be listed anywhere, only reachable by direct link.
 
 export type MetaItem = { label: string; value: string };
 
@@ -50,8 +56,11 @@ export type Project = {
   /** Duration / Team / Platforms / Scope, shown at the top of the case study */
   meta?: MetaItem[];
   body: ContentBlock[];
-  /** Password-protect this case study and hide it from search + the public index. */
+  /** Password-protect this case study and exclude it from search results. */
   protected?: boolean;
+  /** Also hide the card from the home page and /work index (for NDA/stealth
+   * work). Has no effect unless `protected` is also true. */
+  hideFromIndex?: boolean;
 };
 
 export const projects: Project[] = [
@@ -69,6 +78,7 @@ export const projects: Project[] = [
       width: 1200,
       height: 675,
     },
+    protected: true,
     meta: [
       { label: "Duration", value: "Jun 2020 – Jan 2024" },
       { label: "Team", value: "Patient Cloud" },
@@ -680,6 +690,7 @@ export const projects: Project[] = [
     year: "2024",
     tags: ["NDA", "Example"],
     protected: true,
+    hideFromIndex: true,
     body: [
       {
         type: "paragraph",

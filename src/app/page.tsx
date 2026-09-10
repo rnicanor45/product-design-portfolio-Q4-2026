@@ -30,7 +30,7 @@ const services = [
 ];
 
 export default function Home() {
-  const featured = projects.filter((p) => !p.protected).slice(0, 2);
+  const featured = projects.filter((p) => !p.hideFromIndex).slice(0, 2);
   const highlight = testimonials.find((t) => t.featured) ?? testimonials[0];
 
   return (
