@@ -125,6 +125,16 @@ body {
   border-radius: 2px;
 }
 
+/* The image lightbox is intentionally a dark viewer surface regardless of
+ * site theme (standard convention for reviewing photos/screenshots, and it
+ * keeps every image's own colors true rather than sitting on white in light
+ * mode). Overriding --link here means the global :focus-visible rule above
+ * automatically renders a vivid, high-contrast ring on the toolbar buttons
+ * inside it, instead of light mode's deeper (lower-contrast-on-black) cyan. */
+.lightbox-surface {
+  --link: #22d3ee;
+}
+
 /* Skip-to-content link: hidden until keyboard-focused. */
 .skip-link {
   position: absolute;

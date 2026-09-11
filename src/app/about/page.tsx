@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Gallery } from "@/components/media";
+import { ZoomableFillImage } from "@/components/lightbox/zoomable-image";
 
 const careerPhotos = [
   {
@@ -60,16 +60,18 @@ export default function AboutPage() {
         <h1 className="text-3xl font-semibold tracking-tight">
           A human-centered designer
         </h1>
-        <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full border border-border bg-surface sm:h-32 sm:w-32">
-          <Image
-            src="/images/about/profile-portrait.png"
-            alt="Black and white portrait of Ryan Nicanor"
-            fill
-            className="object-cover grayscale"
-            sizes="128px"
-            priority
-          />
-        </div>
+        <ZoomableFillImage
+          image={{
+            src: "/images/about/profile-portrait.png",
+            alt: "Black and white portrait of Ryan Nicanor",
+            width: 3072,
+            height: 4096,
+          }}
+          wrapperClassName="h-28 w-28 shrink-0 overflow-hidden rounded-full border border-border bg-surface sm:h-32 sm:w-32"
+          imageClassName="object-cover grayscale"
+          sizes="128px"
+          priority
+        />
       </div>
       <div className="prose mt-6 max-w-none">
         <p>

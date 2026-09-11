@@ -1,5 +1,5 @@
-import Image from "next/image";
 import type { ImageRef } from "@/data/projects";
+import { ZoomableFillImage, ZoomableImage } from "@/components/lightbox/zoomable-image";
 
 /** Grid column count for a gallery, tuned so small counts don't stretch into
  * awkwardly wide cells and larger counts still read as a tidy grid. */
@@ -20,16 +20,12 @@ export function SingleImage({
 }) {
   return (
     <figure className="flex flex-col gap-2">
-      <div className="overflow-hidden rounded-xl border border-border bg-surface">
-        <Image
-          src={image.src}
-          alt={image.alt}
-          width={image.width}
-          height={image.height}
-          className="h-auto w-full"
-          sizes="(min-width: 768px) 720px, 100vw"
-        />
-      </div>
+      <ZoomableImage
+        image={image}
+        wrapperClassName="overflow-hidden rounded-xl border border-border bg-surface"
+        imageClassName="h-auto w-full"
+        sizes="(min-width: 768px) 720px, 100vw"
+      />
       {caption ? <figcaption className="text-sm text-muted">{caption}</figcaption> : null}
     </figure>
   );
@@ -49,18 +45,13 @@ export function Gallery({
     <figure className="flex flex-col gap-3">
       <div className={`grid gap-3 ${galleryCols(images.length)}`}>
         {images.map((img, i) => (
-          <div
+          <ZoomableFillImage
             key={i}
-            className="relative h-56 overflow-hidden rounded-xl border border-border bg-surface"
-          >
-            <Image
-              src={img.src}
-              alt={img.alt}
-              fill
-              className="object-contain p-3"
-              sizes="(min-width: 640px) 33vw, 50vw"
-            />
-          </div>
+            image={img}
+            wrapperClassName="h-56 overflow-hidden rounded-xl border border-border bg-surface"
+            imageClassName="object-contain p-3"
+            sizes="(min-width: 640px) 33vw, 50vw"
+          />
         ))}
       </div>
       {caption ? <figcaption className="text-sm text-muted">{caption}</figcaption> : null}

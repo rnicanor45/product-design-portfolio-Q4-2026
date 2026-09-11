@@ -5,6 +5,7 @@ import "./globals.css";
 import { MotionRoot } from "@/components/motion-root";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { LightboxProvider } from "@/components/lightbox/lightbox-context";
 
 // Satoshi (Fontshare, ITF Free Font License — self-hosting for a personal
 // site is explicitly permitted, see src/fonts/SATOSHI-LICENSE.txt). Using
@@ -58,11 +59,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <MotionRoot>
-          <Nav />
-          <div id="main" className="flex flex-1 flex-col">
-            {children}
-          </div>
-          <Footer />
+          <LightboxProvider>
+            <Nav />
+            <div id="main" className="flex flex-1 flex-col">
+              {children}
+            </div>
+            <Footer />
+          </LightboxProvider>
         </MotionRoot>
       </body>
     </html>
