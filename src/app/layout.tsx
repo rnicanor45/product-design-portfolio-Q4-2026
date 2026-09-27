@@ -39,6 +39,10 @@ export const metadata: Metadata = {
   },
   description:
     "Ryan Nicanor designs digital products with a deep understanding of people, a daring to be creative, and a collaborative spirit.",
+  // The whole site sits behind a password (see src/proxy.ts), so nothing on
+  // it should be indexed. This is the belt; src/proxy.ts's X-Robots-Tag
+  // header on every response is the suspenders.
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

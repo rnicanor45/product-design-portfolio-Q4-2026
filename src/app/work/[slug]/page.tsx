@@ -17,9 +17,8 @@ export async function generateMetadata({
   return {
     title: project.title,
     description: project.summary,
-    // Protected case studies stay out of search results even once unlocked;
-    // src/proxy.ts adds the matching X-Robots-Tag header on every response.
-    robots: project.protected ? { index: false, follow: false } : undefined,
+    // No per-project override needed: the whole site is noindex (see the
+    // root layout's metadata and the X-Robots-Tag header in src/proxy.ts).
   };
 }
 

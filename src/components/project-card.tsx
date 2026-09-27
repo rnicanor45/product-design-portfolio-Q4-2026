@@ -26,33 +26,6 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="(min-width: 640px) 50vw, 100vw"
             />
-            {project.protected ? (
-              <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-bg/90 px-2.5 py-1 text-xs font-medium text-fg backdrop-blur-sm">
-                <svg
-                  aria-hidden
-                  viewBox="0 0 16 16"
-                  className="h-3 w-3 shrink-0"
-                  fill="none"
-                >
-                  <rect
-                    x="3"
-                    y="7"
-                    width="10"
-                    height="7"
-                    rx="1.5"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                  />
-                  <path
-                    d="M5 7V5a3 3 0 0 1 6 0v2"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                Password protected
-              </span>
-            ) : null}
           </div>
         ) : null}
         <div className="p-6">

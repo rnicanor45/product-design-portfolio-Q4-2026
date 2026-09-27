@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 
-export function LockScreen({ next, label }: { next: string; label: string }) {
+export function LockScreen({ next }: { next: string }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -17,7 +17,7 @@ export function LockScreen({ next, label }: { next: string; label: string }) {
       const res = await fetch("/api/unlock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ path: next, password }),
+        body: JSON.stringify({ password }),
       });
 
       if (!res.ok) {
@@ -43,10 +43,10 @@ export function LockScreen({ next, label }: { next: string; label: string }) {
         className="w-full max-w-sm"
       >
         <h1 className="text-2xl font-semibold tracking-tight text-fg">
-          {label}
+          This portfolio is private
         </h1>
         <p className="mt-2 text-sm text-muted">
-          This case study is private. Enter the password to view it.
+          Enter the password to view it.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-3">

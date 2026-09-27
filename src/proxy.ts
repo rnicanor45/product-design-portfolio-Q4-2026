@@ -1,29 +1,22 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { findProtectedRoute } from "@/lib/protected-routes";
-import { cookieNameFor, verifyToken } from "@/lib/unlock-token";
+import { SITE_UNLOCK_COOKIE, verifySiteToken } from "@/lib/unlock-token";
 
-// Gates any path listed in src/lib/protected-routes.ts behind a password,
-// and marks matching responses noindex,nofollow so search engines skip them
-// even if a link leaks. The matcher below is intentionally broad ("all of
-// /work") because Next requires the matcher to be a static, analyzable
-// value — the actual protected/not-protected decision happens at runtime
-// via findProtectedRoute, driven by the `protected` flag in src/data/projects.ts.
+// Gates the entire site behind a single password, and marks every response
+// noindex,nofollow so search engines skip the whole thing even if a link
+// leaks. The matcher below excludes Next internals, the public/images
+// folder, and the lock screen + unlock API themselves — those three would
+// otherwise break the lock screen (its own assets) or create a redirect
+// loop (locking /locked or /api/unlock).
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const route = findProtectedRoute(pathname);
 
-  if (!route) {
-    return NextResponse.next();
-  }
-
-  const token = request.cookies.get(cookieNameFor(route.path))?.value;
-  const unlocked = verifyToken(route.path, token);
+  const token = request.cookies.get(SITE_UNLOCK_COOKIE)?.value;
+  const unlocked = verifySiteToken(token);
 
   if (!unlocked) {
     const lockUrl = new URL("/locked", request.url);
     lockUrl.searchParams.set("next", pathname);
-    lockUrl.searchParams.set("label", route.label);
     const response = NextResponse.rewrite(lockUrl);
     response.headers.set("X-Robots-Tag", "noindex, nofollow");
     return response;
@@ -35,5 +28,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/work/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|images/|api/unlock|locked).*)",
+  ],
 };

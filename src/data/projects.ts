@@ -6,18 +6,14 @@
 // on-brand styling and motion — add a project here and it automatically
 // looks right, no per-project markup needed.
 //
-// Add `protected: true` to a project and it is automatically:
-//   - gated behind a password (see src/proxy.ts + src/lib/protected-routes.ts)
-//   - excluded from search engines (noindex header + meta tag)
-//   - marked with a "Password protected" badge on its card
-// The password is read from env var `PROJECT_PASSWORD_<SLUG_UPPERCASED>`.
-// See .env.local.example.
+// The whole site sits behind a single password gate (see src/proxy.ts,
+// src/app/locked/, src/app/api/unlock/route.ts, and SITE_PASSWORD in
+// .env.local.example) — every route requires it, so there's no per-project
+// `protected` flag here.
 //
-// `protected` and `hideFromIndex` are independent: a protected case study
-// still shows up as a card on the home page and /work index by default
-// (visitors see it exists and hit the password wall on click — the common
-// portfolio pattern). Add `hideFromIndex: true` as well for true NDA/stealth
-// work that shouldn't be listed anywhere, only reachable by direct link.
+// Add `hideFromIndex: true` to a project to also leave it off the home page
+// and /work index (for NDA/stealth work), reachable only by direct link —
+// still behind the same site-wide password like everything else.
 
 export type MetaItem = { label: string; value: string };
 
@@ -56,10 +52,9 @@ export type Project = {
   /** Duration / Team / Platforms / Scope, shown at the top of the case study */
   meta?: MetaItem[];
   body: ContentBlock[];
-  /** Password-protect this case study and exclude it from search results. */
-  protected?: boolean;
-  /** Also hide the card from the home page and /work index (for NDA/stealth
-   * work). Has no effect unless `protected` is also true. */
+  /** Hide the card from the home page and /work index (for NDA/stealth
+   * work) — still reachable by direct link, and still behind the site-wide
+   * password like every other page. */
   hideFromIndex?: boolean;
 };
 
@@ -78,7 +73,6 @@ export const projects: Project[] = [
       width: 1200,
       height: 675,
     },
-    protected: true,
     meta: [
       { label: "Duration", value: "Jun 2020 – Jan 2024" },
       { label: "Team", value: "Patient Cloud" },
@@ -685,11 +679,10 @@ export const projects: Project[] = [
     slug: "confidential-project",
     title: "Confidential Project",
     summary:
-      "Example of a password-protected, no-index case study for NDA-covered work — replace or delete once you have real protected content.",
+      "Example of an NDA-covered case study kept off the public index — replace or delete once you have real stealth content.",
     role: "Product Designer",
     year: "2024",
     tags: ["NDA", "Example"],
-    protected: true,
     hideFromIndex: true,
     body: [
       {

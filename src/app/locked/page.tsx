@@ -11,7 +11,6 @@ export default async function LockedPage({
 }: PageProps<"/locked">) {
   const params = await searchParams;
   const next = typeof params.next === "string" ? params.next : "/";
-  const label = typeof params.label === "string" ? params.label : "This page";
 
-  return <LockScreen next={next} label={label} />;
+  return <LockScreen next={next} />;
 }
