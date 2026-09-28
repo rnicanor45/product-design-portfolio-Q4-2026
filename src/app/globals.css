@@ -4,6 +4,11 @@
 /* ---------------------------------------------------------------------- *
  * Design tokens.
  *
+ * Every value below points at Tailwind's own palette (`--color-*`, from
+ * `@import "tailwindcss"`), so the site stays in sync with the Tailwind
+ * version in package.json and with the "Color Primitives" variables in the
+ * Figma UI library (e.g. `--color-cyan-700` = `cyan/700` in Figma).
+ *
  * Palette: text and fills are primarily true black/white for maximum
  * contrast. Color is reserved for two jobs: `--link` (aqua, falls back
  * toward blue) marks other actions and links; the aqua/mint/red radial
@@ -17,16 +22,16 @@
  * in both directions, so the toggle can override either way.
  * ---------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --surface: #fafafa;
-  --border: #e5e5e5;
-  --muted: #525252;
-  --link: #0e7490;
+  --background: var(--color-white);
+  --foreground: var(--color-black);
+  --surface: var(--color-neutral-50);
+  --border: var(--color-neutral-200);
+  --muted: var(--color-neutral-600);
+  --link: var(--color-cyan-700);
 
-  --gradient-aqua: #22d3ee;
-  --gradient-mint: #34d399;
-  --gradient-red: #f43f5e;
+  --gradient-aqua: var(--color-cyan-400);
+  --gradient-mint: var(--color-emerald-400);
+  --gradient-red: var(--color-rose-500);
   --gradient-primary: radial-gradient(
     circle at 30% 30%,
     var(--gradient-aqua) 0%,
@@ -54,22 +59,22 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --background: #000000;
-    --foreground: #ffffff;
-    --surface: #0a0a0a;
-    --border: #262626;
-    --muted: #a3a3a3;
-    --link: #22d3ee;
+    --background: var(--color-black);
+    --foreground: var(--color-white);
+    --surface: var(--color-neutral-950);
+    --border: var(--color-neutral-800);
+    --muted: var(--color-neutral-400);
+    --link: var(--color-cyan-400);
   }
 }
 
 :root[data-theme="dark"] {
-  --background: #000000;
-  --foreground: #ffffff;
-  --surface: #0a0a0a;
-  --border: #262626;
-  --muted: #a3a3a3;
-  --link: #22d3ee;
+  --background: var(--color-black);
+  --foreground: var(--color-white);
+  --surface: var(--color-neutral-950);
+  --border: var(--color-neutral-800);
+  --muted: var(--color-neutral-400);
+  --link: var(--color-cyan-400);
 }
 
 @theme inline {
@@ -150,7 +155,7 @@ body {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
     var(--gradient-primary);
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 /* Primary call-out text (e.g. headline stats): the same gradient, clipped
